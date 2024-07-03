@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ namespace NZWalks.API.Controllers
             this.autoMapper = autoMapper;
         }
         [HttpGet]
+        [Authorize(Roles ="Reader")]
         public async Task<IActionResult> GetAll()
         {
             // Repositry is responsible to talk with database
@@ -54,6 +56,8 @@ namespace NZWalks.API.Controllers
         }
         [HttpGet]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Reader,Writer")]
+
         public async Task<IActionResult> GetRegionById([FromRoute] Guid id)
         {
             //var region=dbContext.Regions.Find(id); only can be used with id property
@@ -73,6 +77,8 @@ namespace NZWalks.API.Controllers
         // POST: https://localhost(portNumber)/api/region
         [HttpPost]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
+
         public async Task <IActionResult> CreateRegion([FromBody] AddRegionRequestDTO addRegionRequestDTO)
         {
             //Map or Convert DTO to Domain Model
@@ -93,6 +99,8 @@ namespace NZWalks.API.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
+        [Authorize(Roles = "Writer")]
+
         public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
             var regionDomainModel = autoMapper.Map<Region>(updateRegionRequestDTO);
@@ -108,6 +116,8 @@ namespace NZWalks.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
+
         public async Task <IActionResult> DeleteRegion([FromRoute]Guid id) 
         {
             var regionDomainModel= await regionRepository.DeleteRegionAsync(id);
