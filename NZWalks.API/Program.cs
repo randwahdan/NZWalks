@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography.Xml;
+using Microsoft.Extensions.FileProviders;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddEndpointsApiExplorer();
@@ -62,6 +64,7 @@ options.UseSqlServer("Data Source=localhost;Initial Catalog=NZWalksAuthDb;Integr
 builder.Services.AddScoped<IRegionRepository,SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<IImageRepository, LocalImageRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
@@ -109,6 +112,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 //before the Authorization we need to add Authentication to middleware
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions 
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),"Images")),
+    RequestPath = "/Images"
+});
 
 app.MapControllers();
 
