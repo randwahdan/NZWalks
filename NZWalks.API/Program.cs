@@ -9,9 +9,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using System.Security.Cryptography.Xml;
 using Microsoft.Extensions.FileProviders;
+using Serilog;
+using NZWalks.API.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+//inject SeriLog
+var logger=new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/NZWalks_log.txt",rollingInterval: RollingInterval.Minute) //check logs for Minute
+    .MinimumLevel.Warning()
+    .CreateLogger();
+
+// supply this logger 
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 
@@ -108,6 +122,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 //before the Authorization we need to add Authentication to middleware
