@@ -28,9 +28,6 @@ The project follows an N-Tier architecture with the following layers:
 - IWebHostEnvironment: It is used to get the web host environment information, such as content root path.
 - IHttpContextAccessor: IHttpContextAccessor is used to access the HttpContext, which is used for getting the base URL to form image file paths.
 
-## Third-Party Libraries
-- AutoMapper
-- Serilog
-- JWT Bearer
+
 
 
