@@ -17,14 +17,14 @@ namespace NZWalks.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegionController : ControllerBase
+    public class RegionsController : ControllerBase
     {
         private readonly NZWalksDbContext dbContext;
         private readonly IRegionRepository regionRepository;
         private readonly IMapper autoMapper;
-        private readonly ILogger<RegionController> logger;
+        private readonly ILogger<RegionsController> logger;
 
-        public RegionController(NZWalksDbContext dbContext,IRegionRepository regionRepository,IMapper autoMapper,ILogger<RegionController>logger)
+        public RegionsController(NZWalksDbContext dbContext,IRegionRepository regionRepository,IMapper autoMapper,ILogger<RegionsController>logger)
         {
             //DI
             this.dbContext = dbContext;
@@ -38,7 +38,7 @@ namespace NZWalks.API.Controllers
         {
             try
             {
-                throw new Exception("This is a custom exception");
+                
                 // Repository is responsible to talk with database
                 var regionsDomain = await regionRepository.GetAllAsync();
                 logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regionsDomain)}");
@@ -74,7 +74,7 @@ namespace NZWalks.API.Controllers
         }
         [HttpGet]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Reader,Writer")]
+        //[Authorize(Roles = "Reader,Writer")]
 
         public async Task<IActionResult> GetRegionById([FromRoute] Guid id)
         {
@@ -95,7 +95,7 @@ namespace NZWalks.API.Controllers
         // POST: https://localhost(portNumber)/api/region
         [HttpPost]
         [ValidateModel]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
 
         public async Task <IActionResult> CreateRegion([FromBody] AddRegionRequestDTO addRegionRequestDTO)
         {
@@ -117,7 +117,7 @@ namespace NZWalks.API.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
 
         public async Task<IActionResult> UpdateRegion([FromRoute] Guid id, [FromBody] UpdateRegionRequestDTO updateRegionRequestDTO)
         {
@@ -134,7 +134,7 @@ namespace NZWalks.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Writer")]
+        //[Authorize(Roles = "Writer")]
 
         public async Task <IActionResult> DeleteRegion([FromRoute]Guid id) 
         {
